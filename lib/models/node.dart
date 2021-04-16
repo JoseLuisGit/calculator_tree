@@ -3,7 +3,7 @@ class Node {
   Node nodeRight;
   Node nodeLeft;
 
-  Node.information(informacion) {
+  Node.information(information) {
     this.nodeLeft = null;
     this.nodeRight = null;
     this.information = information;

@@ -13,6 +13,10 @@ class Stack<T> {
     return element;
   }
 
+  T peek() {
+    return _stack.last;
+  }
+
   void clear() {
     _stack.clear();
   }
