@@ -1,63 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:calculator/models/expression_tree.dart';
+import 'widgets/button.dart';
 
 class CalculatorPage extends StatelessWidget {
   const CalculatorPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.calculate),
-          onPressed: () {
-            ExpressionTree expressionTree = ExpressionTree();
-            expressionTree.buildTree("(5+1)*(5-2+3)/6");
-            print(expressionTree.evaluate());
-          },
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.black12,
+          title: Text('Calculadora Simple'),
         ),
+        backgroundColor: Color.fromRGBO(62, 64, 71, 1.0),
         body: Column(
           children: [
-            SizedBox(
-              child: Center(
-                  child: Text(
-                'Calculadora Simple',
-                style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w600),
-              )),
-              height: size.height * 0.1,
-            ),
-            Card(
-                child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: TextField(
-                keyboardType: TextInputType.number,
-                maxLines: 8,
-                style: TextStyle(fontSize: 25.0),
-                decoration: InputDecoration.collapsed(
-                    border: OutlineInputBorder(),
-                    hintText: "Introduzca su operación"),
-              ),
-            )),
             Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Color.fromRGBO(110, 111, 105, 1.0),
+                      borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                  child: Container(
+                    padding: EdgeInsets.all(20),
+                    alignment: Alignment.centerRight,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Text(
+                        '5+5-8/log(5)5+5-8/log(5)5+5-8/log(5)5+5-8/9*(5)5+5-8/log(5)5+5-8/log(5)5+5-8/log(5)5+5-8/9*(5)5+5-8/log(5)5+5-8/log(5)5+5-8/log(5)5+5-8/9*(5)5+5-8/log(5)5+5-8/log(5)5+5-8/log(5)5+5-8/9*(5)',
+                        style: TextStyle(fontSize: 40, fontFamily: 'DsDigit'),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
               child: Container(
-                padding: EdgeInsets.all(8.0),
                 child: SingleChildScrollView(
                   child: GridView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: 10,
+                      itemCount: 50,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 4,
-                          childAspectRatio: 3 / 2,
                           crossAxisSpacing: 10,
                           mainAxisSpacing: 10),
                       itemBuilder: (context, index) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: Colors.amber,
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Center(child: Text('$index')),
+                        return Button(
+                          buttonText: '$index',
+                          color: Color.fromRGBO(126, 112, 112, 1.0),
+                          textColor: Colors.white,
                         );
                       }),
                 ),
