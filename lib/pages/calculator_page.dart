@@ -1,12 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'widgets/button.dart';
+
+import '../provider/expression.dart';
 
 class CalculatorPage extends StatelessWidget {
   const CalculatorPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final List<String> buttons = [
+      'C',
+      '(',
+      ')',
+      'DEL',
+      '7',
+      '8',
+      '9',
+      '/',
+      '4',
+      '5',
+      '6',
+      'x',
+      '1',
+      '2',
+      '3',
+      '-',
+      '0',
+      '.',
+      '^',
+      '+',
+    ];
+
+    final expression = Provider.of<Expression>(context);
+
+    bool isOperator(String x) {
+      return (x == '/' || x == 'x' || x == '-' || x == '+' || x == '=');
+    }
+
+    ScrollController _scrollController = ScrollController();
     return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          child: Text(
+            '=',
+            style: TextStyle(color: Colors.white, fontSize: 35.0),
+          ),
+          onPressed: () {},
+        ),
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Colors.black12,
@@ -28,9 +69,10 @@ class CalculatorPage extends StatelessWidget {
                       padding: EdgeInsets.all(20),
                       alignment: Alignment.centerRight,
                       child: SingleChildScrollView(
+                        controller: _scrollController,
                         scrollDirection: Axis.horizontal,
                         child: Text(
-                          '5+5-8/log(5)5+5-8/log(5)5+5-8/log(5)5+5-8/9*(5)5+5-8/log(5)5+5-8/log(5)5+5-8/log(5)5+5-8/9*(5)5+5-8/log(5)5+5-8/log(5)5+5-8/log(5)5+5-8/9*(5)5+5-8/log(5)5+5-8/log(5)5+5-8/log(5)5+5-8/9*(5)',
+                          expression.expression,
                           style: TextStyle(fontSize: 40, fontFamily: 'DsDigit'),
                         ),
                       ),
@@ -45,18 +87,82 @@ class CalculatorPage extends StatelessWidget {
                     child: GridView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: 50,
+                        itemCount: buttons.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount:
                                 orientation == Orientation.portrait ? 4 : 8,
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10),
                         itemBuilder: (context, index) {
-                          return Button(
-                            buttonText: '$index',
-                            color: Color.fromRGBO(126, 112, 112, 1.0),
-                            textColor: Colors.white,
-                          );
+                          // Clear Button
+                          if (index == 0) {
+                            return Button(
+                              buttontapped: () {
+                                expression.clearExpression();
+                                _scrollController.jumpTo(
+                                    _scrollController.position.maxScrollExtent);
+                              },
+                              buttonText: buttons[index],
+                              color: Colors.blue,
+                              textColor: Colors.white,
+                            );
+                          }
+
+                          // ( button
+                          else if (index == 1) {
+                            return Button(
+                              buttonText: buttons[index],
+                              color: Colors.blue,
+                              textColor: Colors.white,
+                              buttontapped: () {
+                                expression.addOper(buttons[index]);
+                                _scrollController.jumpTo(
+                                    _scrollController.position.maxScrollExtent);
+                              },
+                            );
+                          }
+                          // ) Button
+                          else if (index == 2) {
+                            return Button(
+                              buttonText: buttons[index],
+                              color: Colors.blue,
+                              textColor: Colors.white,
+                              buttontapped: () {
+                                expression.addOper(buttons[index]);
+                                _scrollController.jumpTo(
+                                    _scrollController.position.maxScrollExtent);
+                              },
+                            );
+                          }
+                          // Delete Button
+                          else if (index == 3) {
+                            return Button(
+                              buttonText: buttons[index],
+                              color: Colors.blue,
+                              textColor: Colors.white,
+                              buttontapped: () {
+                                expression.deleteExpression();
+                              },
+                            );
+                          }
+
+                          //  other buttons
+                          else {
+                            return Button(
+                              buttontapped: () {
+                                expression.addOper(buttons[index]);
+                                _scrollController.jumpTo(
+                                    _scrollController.position.maxScrollExtent);
+                              },
+                              buttonText: buttons[index],
+                              color: isOperator(buttons[index])
+                                  ? Colors.blueAccent
+                                  : Color.fromRGBO(114, 114, 117, 1.0),
+                              textColor: isOperator(buttons[index])
+                                  ? Colors.white
+                                  : Colors.white,
+                            );
+                          }
                         }),
                   ),
                 ),
