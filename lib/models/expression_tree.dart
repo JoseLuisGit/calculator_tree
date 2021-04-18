@@ -1,4 +1,7 @@
+import 'dart:math' as math;
+
 import 'node.dart';
+
 import '../consts/characters.dart';
 import '../utils/stack.dart';
 
@@ -27,7 +30,8 @@ class ExpressionTree {
 
   Node buildTree(String expression) {
     try {
-      RegExp regExp = RegExp(r'[\d]{.}'); //expression number more point
+      expression = _fixExpression(expression);
+      RegExp regExp = RegExp(r'[\d{.}]'); //expression number more point
       for (var i = 0; i < expression.length; i++) {
         String token = "";
         while (i < expression.length && regExp.hasMatch(expression[i])) {
@@ -108,11 +112,27 @@ class ExpressionTree {
           case '-':
             result = resultLeft - resultRight;
             break;
-          case '*':
+          case 'x':
             result = resultLeft * resultRight;
             break;
           case '/':
             result = resultLeft / resultRight;
+            break;
+          case '^':
+            result = math.pow(resultLeft, resultRight);
+            break;
+          //logaritmo natural
+          case 'l':
+            result = math.log(resultRight);
+            break;
+          case 'i':
+            result = math.log(resultRight) / math.log(10);
+            break;
+          case 's':
+            result = math.sin(resultRight);
+            break;
+          case 'c':
+            result = math.cos(resultRight);
             break;
           default:
             break;
@@ -132,5 +152,13 @@ class ExpressionTree {
       _printPost(r.getNodeRight);
       print(r.getInformation);
     }
+  }
+
+  _fixExpression(String expression) {
+    expression = expression.replaceAll('ln', '0l');
+    expression = expression.replaceAll('cos', '0c');
+    expression = expression.replaceAll('sen', '0s');
+    expression = expression.replaceAll('log', '0i');
+    return expression;
   }
 }

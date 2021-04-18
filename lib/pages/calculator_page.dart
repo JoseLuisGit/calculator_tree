@@ -31,6 +31,10 @@ class CalculatorPage extends StatelessWidget {
       '.',
       '^',
       '+',
+      'cos(',
+      'sen(',
+      'ln(',
+      'log('
     ];
 
     final expression = Provider.of<Expression>(context);
@@ -41,12 +45,23 @@ class CalculatorPage extends StatelessWidget {
 
     ScrollController _scrollController = ScrollController();
     return Scaffold(
+        bottomNavigationBar: BottomAppBar(
+          shape: CircularNotchedRectangle(),
+          child: Container(
+            height: 50.0,
+          ),
+          color: Colors.orangeAccent,
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.orange,
           child: Text(
             '=',
-            style: TextStyle(color: Colors.white, fontSize: 35.0),
+            style: TextStyle(color: Colors.white, fontSize: 50.0),
           ),
-          onPressed: () {},
+          onPressed: () {
+            expression.evaluate();
+          },
         ),
         appBar: AppBar(
           centerTitle: true,
@@ -58,24 +73,42 @@ class CalculatorPage extends StatelessWidget {
           builder: (context, orientation) => Column(
             children: [
               Expanded(
-                flex: orientation == Orientation.portrait ? 1 : 2,
+                flex: orientation == Orientation.portrait ? 1 : 3,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     decoration: BoxDecoration(
                         color: Color.fromRGBO(110, 111, 105, 1.0),
                         borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      alignment: Alignment.centerRight,
-                      child: SingleChildScrollView(
-                        controller: _scrollController,
-                        scrollDirection: Axis.horizontal,
-                        child: Text(
-                          expression.expression,
-                          style: TextStyle(fontSize: 40, fontFamily: 'DsDigit'),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(15),
+                          alignment: Alignment.centerRight,
+                          child: SingleChildScrollView(
+                            controller: _scrollController,
+                            scrollDirection: Axis.horizontal,
+                            child: Text(
+                              expression.expression,
+                              style: TextStyle(
+                                  fontSize: 40, fontFamily: 'DsDigit'),
+                            ),
+                          ),
                         ),
-                      ),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Text(
+                              expression.result,
+                              style: TextStyle(
+                                  fontSize: 45,
+                                  color: Colors.white,
+                                  fontFamily: 'DsDigit'),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
